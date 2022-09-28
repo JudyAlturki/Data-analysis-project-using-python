@@ -1,0 +1,67 @@
+%matplotlib notebook
+import pandas as pd 
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import matplotlib.gridspec as gridspec
+
+df=pd.read_csv('SAMA_StatisticalReport_2022 (3).csv',nrows=53)
+df2=pd.read_csv('SAMA_StatisticalReport_2022 (5).csv',nrows=53)
+#df=df.set_index("Date")
+df['Accident and Liability Net Claims ']=df['Accident and Liability Net Claims '].clip(lower=0)
+df['Date']=df['Date'].str.replace(' ','')
+df['Date'] = pd.PeriodIndex(df['Date'], freq='Q').strftime('%Y-%m')
+df['Date']=pd.to_datetime(df['Date'])
+df2['Date']=df2['Date'].str.replace(' ','')
+df2['Date'] = pd.PeriodIndex(df2['Date'], freq='Q').strftime('%Y-%m')
+df2['Date']=pd.to_datetime(df2['Date'])
+df2=df2.set_index('Date')
+df2=df2.groupby(pd.Grouper(freq="A")).sum()
+df2.index = df2.index.date
+df2.index=pd.DatetimeIndex(df2.index).year
+
+
+
+plt.figure(figsize=(13,8))
+ax1=plt.subplot2grid((4, 2), (0, 0), colspan=1)
+ax1.plot(df['Date'],df['Property/ Fire Net Claims'],"-",label='Net Claims',color='gray')
+ax1.plot(df['Date'],df['Property/ Fire Net  Earned Premium'],'-',label='NetEarnedPremium')
+ax2=plt.subplot2grid((4, 2), (1, 0), colspan=1)
+ax2.plot(df['Date'],df['Accident and Liability Net Claims '],"-",label='Net Claims',color='gray')
+ax2.plot(df['Date'],df['Accident and Liability Net Earned Premium'],'-',label='NetEarnedPremium')
+ax3=plt.subplot2grid((4, 2), (2, 0), colspan=1)
+ax3.plot(df['Date'],df['Motor Net Claims'],"-",label='Net Claims',color='gray')
+ax3.plot(df['Date'],df['Motor Net Earned Premium '],'-',label='NetEarnedPremium')
+ax4=plt.subplot2grid((4, 2), (3, 0),colspan=1)
+ax4.plot(df['Date'],df['Health Net Claims'],"-",label='Net Claims',color='gray')
+ax4.plot(df['Date'],df['Health Net Earned Premium'],'-',label='NetEarnedPremium')
+ax5=plt.subplot2grid((4, 2), (0, 1),rowspan=4)
+df2.plot(ax=ax5,title='Gross Written Premium',colormap='BrBG',kind='bar')
+plt.tight_layout()
+
+
+ax1.set_xticklabels([])
+ax2.set_xticklabels([])
+ax3.set_xticklabels([])
+ax4.legend(loc='upper left')
+plt.subplots_adjust(right=0.7)
+ax1.set_title('Property/ Fire')
+ax2.set_title('Accident and Liability')
+ax3.set_title('Motor')
+ax4.set_title('Health')
+ax1.spines['top'].set_visible(False)
+ax1.spines['right'].set_visible(False)
+ax2.spines['top'].set_visible(False)
+ax2.spines['right'].set_visible(False)
+ax3.spines['top'].set_visible(False)
+ax3.spines['right'].set_visible(False)
+ax4.spines['top'].set_visible(False)
+ax4.spines['right'].set_visible(False)
+ax5.spines['left'].set_visible(False)
+ax5.spines['top'].set_visible(False)
+ax3.ticklabel_format(style='plain',axis='y')
+ax4.ticklabel_format(style='plain',axis='y')
+ax5.ticklabel_format(style='plain',axis='y')
+ax5.tick_params(axis='both', left=False, top=False, right=True, bottom=True, labelleft=False, labeltop=False, labelright=True, labelbottom=True)
+plt.ylabel("Saudi Riyal(SAR)",fontweight='bold')
+
+plt.savefig('test.png', bbox_inches='tight')
