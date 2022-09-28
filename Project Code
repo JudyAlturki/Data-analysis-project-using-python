@@ -1,4 +1,4 @@
-%matplotlib notebook
+#%matplotlib notebook
 import pandas as pd 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -21,7 +21,10 @@ df2.index=pd.DatetimeIndex(df2.index).year
 
 
 
-plt.figure(figsize=(13,8))
+
+fig, axes = plt.subplots(2, 3)
+fig.set_figheight(8)
+fig.set_figwidth(13)
 ax1=plt.subplot2grid((4, 2), (0, 0), colspan=1)
 ax1.plot(df['Date'],df['Property/ Fire Net Claims'],"-",label='Net Claims',color='gray')
 ax1.plot(df['Date'],df['Property/ Fire Net  Earned Premium'],'-',label='NetEarnedPremium')
@@ -48,20 +51,16 @@ ax1.set_title('Property/ Fire')
 ax2.set_title('Accident and Liability')
 ax3.set_title('Motor')
 ax4.set_title('Health')
-ax1.spines['top'].set_visible(False)
-ax1.spines['right'].set_visible(False)
-ax2.spines['top'].set_visible(False)
-ax2.spines['right'].set_visible(False)
-ax3.spines['top'].set_visible(False)
-ax3.spines['right'].set_visible(False)
-ax4.spines['top'].set_visible(False)
-ax4.spines['right'].set_visible(False)
+for i,ax in enumerate(fig.axes):
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
 ax5.spines['left'].set_visible(False)
-ax5.spines['top'].set_visible(False)
+ax5.spines['right'].set_visible(True)
 ax3.ticklabel_format(style='plain',axis='y')
 ax4.ticklabel_format(style='plain',axis='y')
 ax5.ticklabel_format(style='plain',axis='y')
 ax5.tick_params(axis='both', left=False, top=False, right=True, bottom=True, labelleft=False, labeltop=False, labelright=True, labelbottom=True)
 plt.ylabel("Saudi Riyal(SAR)",fontweight='bold')
+
 
 plt.savefig('test.png', bbox_inches='tight')
